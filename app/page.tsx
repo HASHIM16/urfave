@@ -1,43 +1,20 @@
-'use client'
 
-import { useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { supabase } from "@/lib/supabase";
 
-export default function Home() {
-  const [url, setUrl] = useState('')
-  const [message, setMessage] = useState('')
-
-  const addFavorite = async () => {
-    const { error } = await supabase.from('favorites').insert([{ url }])
-
-    if (error) {
-      setMessage('Error adding favorite')
-      console.error(error)
-    } else {
-      setMessage('Saved successfully!')
-      setUrl('')
-    }
-  }
+export default async function Home() {
+  const { data, error } = await supabase
+    .from("favorites")
+    .select("*");
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-4 p-6">
-      <h1 className="text-2xl font-bold">URFAVE Test</h1>
+    <div style={{ padding: 40 }}>
+      <h1>URFAVE Database Test</h1>
 
-      <input
-        className="w-80 rounded border p-2"
-        placeholder="Enter URL"
-        value={url}
-        onChange={(e) => setUrl(e.target.value)}
-      />
+      {error && <p>Error: {error.message}</p>}
 
-      <button
-        onClick={addFavorite}
-        className="rounded bg-purple-600 px-4 py-2 text-white"
-      >
-        Save
-      </button>
-
-      {message && <p>{message}</p>}
+      {data && (
+        <pre>{JSON.stringify(data, null, 2)}</pre>
+      )}
     </div>
-  )
+  );
 }
