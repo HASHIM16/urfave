@@ -1,0 +1,5 @@
+nano app/page.tsx
+git add .
+git commit -m "Fix homepage build error"
+git push
+
